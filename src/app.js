@@ -56,15 +56,15 @@ app.use("*", (req, res) => {
  */
 const startServer = async () => {
 	try {
+		console.log("[INIT] Starting server...");
 		await connectDB();
+		console.log("[INIT] Database connected ✅");
+
 		app.listen(PORT, () => {
-			logger.verbose(`Server is running on port ${PORT}`);
-			logger.verbose(
-				`Environment: ${process.env.NODE_ENV || "development"}`
-			);
+			console.log(`[SERVER] Listening on port ${PORT}`);
 		});
 	} catch (error) {
-		logger.critical("Failed to start server:", error);
+		console.error("[FATAL] Failed to start server:", error);
 		process.exit(1);
 	}
 };
