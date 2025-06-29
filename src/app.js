@@ -64,7 +64,7 @@ const startServer = async () => {
       console.log(`[SERVER] Listening on port ${PORT}`);
     });
 
-    require("./scripts/scheduler");
+    require("../scripts/scheduler");
     console.log("[SCHEDULER] Started");
   } catch (error) {
     console.error("[FATAL] Failed to start server:", error);
