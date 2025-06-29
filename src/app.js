@@ -37,6 +37,10 @@ app.get("/health", (req, res) => {
   res.status(200).json({ status: "OK", timestamp: new Date().toISOString() });
 });
 
+app.get("/",(req,res) => {
+	res.json("HLO WORLD");
+})
+
 // Global error handler
 app.use((err, req, res, next) => {
   logger.critical("Unhandled error:", err);
