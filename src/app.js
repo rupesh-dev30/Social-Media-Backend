@@ -29,44 +29,47 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
-app.use("/api/likes",likeRoute);
-app.use("/api/comments",commentRoute);
+app.use("/api/likes", likeRoute);
+app.use("/api/comments", commentRoute);
 
 // Health check endpoint
 app.get("/health", (req, res) => {
-	res.status(200).json({ status: "OK", timestamp: new Date().toISOString() });
+  res.status(200).json({ status: "OK", timestamp: new Date().toISOString() });
 });
 
 // Global error handler
 app.use((err, req, res, next) => {
-	logger.critical("Unhandled error:", err);
-	res.status(500).json({
-		error: "Internal server error",
-		...(process.env.NODE_ENV === "development" && { details: err.message }),
-	});
+  logger.critical("Unhandled error:", err);
+  res.status(500).json({
+    error: "Internal server error",
+    ...(process.env.NODE_ENV === "development" && { details: err.message }),
+  });
 });
 
 // 404 handler
 app.use("*", (req, res) => {
-	res.status(404).json({ error: "Route not found" });
+  res.status(404).json({ error: "Route not found" });
 });
 
 /**
  * Start the server
  */
 const startServer = async () => {
-	try {
-		console.log("[INIT] Starting server...");
-		await connectDB();
-		console.log("[INIT] Database connected ✅");
+  try {
+    console.log("[INIT] Starting server...");
+    await connectDB();
+    console.log("[INIT] Database connected ✅");
 
-		app.listen(PORT, () => {
-			console.log(`[SERVER] Listening on port ${PORT}`);
-		});
-	} catch (error) {
-		console.error("[FATAL] Failed to start server:", error);
-		process.exit(1);
-	}
+    app.listen(PORT, () => {
+      console.log(`[SERVER] Listening on port ${PORT}`);
+    });
+
+    require("./scripts/scheduler");
+    console.log("[SCHEDULER] Started");
+  } catch (error) {
+    console.error("[FATAL] Failed to start server:", error);
+    process.exit(1);
+  }
 };
 
 startServer();
